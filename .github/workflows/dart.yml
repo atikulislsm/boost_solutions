@@ -19,16 +19,18 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      # Force correct Xcode version (15.4 has iOS 17 SDK)
+      # Select correct Xcode version (15.4 includes iOS 17 SDK + Swift 5.9)
       - name: Select Xcode
         run: sudo xcode-select -s "/Applications/Xcode_15.4.app"
 
       - name: Export Xcode path
         run: echo "DEVELOPER_DIR=/Applications/Xcode_15.4.app/Contents/Developer" >> $GITHUB_ENV
 
+      # Install CocoaPods and Pods
       - name: Install CocoaPods
+        working-directory: ios
         run: |
-          cd ios
+          sudo gem install cocoapods --no-document
           pod repo update
           pod install --verbose
 
