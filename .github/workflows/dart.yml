@@ -26,13 +26,18 @@ jobs:
       - name: Export Xcode path
         run: echo "DEVELOPER_DIR=/Applications/Xcode_15.4.app/Contents/Developer" >> $GITHUB_ENV
 
-      # Install CocoaPods and Pods
+      # Clean old Pods/lockfile to avoid version conflicts
+      - name: Clean iOS Pods
+        working-directory: ios
+        run: |
+          rm -rf Podfile.lock Pods
+
+      # Install CocoaPods & update repos
       - name: Install CocoaPods
         working-directory: ios
         run: |
           sudo gem install cocoapods --no-document
-          pod repo update
-          pod install --verbose
+          pod install --repo-update --verbose
 
       - name: Build iOS (no codesign)
         run: flutter build ios --release --no-codesign
